@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArchMD - Pair Code Generator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #1DB954;
+      --secondary-color: #0D8043;
+      --dark-color: #006837;
+      --light-color: #E8F5E9;
+      --accent-color: #4CAF50;
+      --text-color: #ffffff;
+      --bg-color: rgba(0, 0, 0, 0.85);
+      --box-shadow: 0 8px 32px rgba(0, 104, 55, 0.3);
+      --gradient: linear-gradient(135deg, var(--primary-color), var(--dark-color));
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      background-color: #121212;
+      background-image: 
+        radial-gradient(circle at 25% 25%, rgba(29, 185, 84, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(29, 185, 84, 0.1) 0%, transparent 50%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text-color);
+      overflow-x: hidden;
+    }
+
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .logo-icon {
+      font-size: 2rem;
+      color: var(--primary-color);
+      animation: pulse 2s infinite alternate;
+    }
+
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: 1px;
+    }
+
+    .back-button {
+      color: var(--text-color);
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+
+    .back-button:hover {
+      color: var(--primary-color);
+      transform: translateX(-3px);
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      width: 100%;
+      max-width: 500px;
+      padding: 6rem 2rem 2rem;
+      margin-top: 2rem;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    .box {
+      width: 100%;
+      padding: 2rem;
+      background: var(--bg-color);
+      border-radius: 20px;
+      box-shadow: var(--box-shadow);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.4s ease;
+    }
+
+    .box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 104, 55, 0.4);
+      border-color: var(--primary-color);
+    }
+
+    .title-container {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .title-icon {
+      font-size: 3rem;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1rem;
+      line-height: 1.5;
+      margin-bottom: 2rem;
+    }
+
+    .input-container {
+      display: flex;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      margin-bottom: 2rem;
+    }
+
+    .input-container:focus-within {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(29, 185, 84, 0.3);
+    }
+
+    .input-container input {
+      flex: 1;
+      background: transparent;
+      padding: 1rem 1.5rem;
+      border: none;
+      color: var(--text-color);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .input-container input:focus {
+      outline: none;
+    }
+
+    .input-container input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .input-container button {
+      padding: 0 1.5rem;
+      background: var(--gradient);
+      color: white;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .input-container button:hover {
+      background: linear-gradient(135deg, var(--dark-color), var(--primary-color));
+    }
+
+    #waiting-message {
+      display: none;
+      color: var(--primary-color);
+      margin: 1rem 0;
+      font-style: italic;
+      animation: pulse 1.5s infinite alternate;
+    }
+
+    .result-container {
+      margin-top: 1rem;
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    #copy {
+      cursor: pointer;
+      color: var(--light-color);
+      font-weight: bold;
+      transition: all 0.3s ease;
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 8px;
+      background: rgba(29, 185, 84, 0.2);
+    }
+
+    #copy:hover {
+      background: rgba(29, 185, 84, 0.3);
+      transform: scale(1.05);
+    }
+
+    .social-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    .social-title {
+      text-align: center;
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 0.5rem;
+    }
+
+    .social-buttons {
+      display: flex;
+      gap: 1rem;
+      width: 100%;
+    }
+
+    .social-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.8rem;
+      padding: 1rem;
+      border-radius: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .group-btn {
+      background: rgba(29, 185, 84, 0.2);
+      color: var(--text-color);
+    }
+
+    .channel-btn {
+      background: rgba(0, 104, 55, 0.2);
+      color: var(--text-color);
+    }
+
+    .social-btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      border-color: var(--primary-color);
+    }
+
+    .social-btn i {
+      font-size: 1.2rem;
+      color: var(--primary-color);
+    }
+
+    .footer {
+      width: 100%;
+      padding: 2rem;
+      text-align: center;
+      margin-top: 3rem;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9rem;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      from {
+        opacity: 0.8;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+      100% {
+        transform: translateY(0px);
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+  .container {
+    padding: 5rem 1rem 1rem;
+  }
+  
+  .box {
+    padding: 1.5rem;
+  }
+  
+  .title {
+    font-size: 1.8rem;
+  }
+  
+  .social-buttons {
+    flex-direction: column;
+  }
+  
+  .header {
+    padding: 1rem;
+  }
+  
+  .logo-text {
+    font-size: 1.2rem;
+  }
+
+  /* NEW: Fix for Generate button on mobile */
+  .input-container {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .input-container input,
+  .input-container button {
+    width: 100%;
+    padding: 1rem;
+  }
+}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="logo-container">
+      <i class="fas fa-robot logo-icon"></i>
+      <div class="logo-text">ARCHMD</div>
+    </div>
+    <a href="/" class="back-button">
+      <i class="fas fa-arrow-left"></i>
+      <span>Back</span>
+    </a>
+  </header>
+
+  <div class="container">
+    <div class="box">
+      <div class="title-container">
+        <i class="fas fa-link title-icon"></i>
+        <h1 class="title">Generate Pair Code</h1>
+        <p class="subtitle">Enter your WhatsApp number with country code (without + symbol)</p>
+      </div>
+      
+      <div class="input-container">
+        <input type="tel" id="number" placeholder="2347080968xxx" pattern="[0-9]*" inputmode="numeric">
+        <button id="submit">Generate</button>
+      </div>
+      
+      <div id="waiting-message">Generating your pair code, please wait...</div>
+      
+      <div class="result-container">
+        <main id="pair"></main>
+      </div>
+    </div>
+    
+    <div class="social-container">
+      <h3 class="social-title">Join our community</h3>
+      <div class="social-buttons">
+        <a href="https://chat.whatsapp.com/GmHOFOqQsM8A160ZCjcVnb" class="social-btn group-btn" target="_blank">
+          <i class="fas fa-users"></i>
+          <span>WhatsApp Group</span>
+        </a>
+        <a href="https://whatsapp.com/channel/0029VbAQfFGBVJl6W26JXy2n" class="social-btn channel-btn" target="_blank">
+          <i class="fas fa-bullhorn"></i>
+          <span>Channel</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    © 2023 ArchMD Bot. All rights reserved.
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
+  <script>
+    let a = document.getElementById("pair");
+    let b = document.getElementById("submit");
+    let c = document.getElementById("number");
+    let waitingMessage = document.getElementById("waiting-message");
+
+    async function Copy() {
+      let text = document.getElementById("copy").innerText;
+      let obj = document.getElementById("copy");
+      await navigator.clipboard.writeText(obj.innerText.replace('CODE: ', ''));
+      obj.innerText = "COPIED";
+      obj.style = "color: var(--primary-color); font-weight: bold; background: rgba(29, 185, 84, 0.3);";
+      setTimeout(() => {
+        obj.innerText = text;
+        obj.style = "color: var(--light-color); font-weight: bold; background: rgba(29, 185, 84, 0.2);";
+      }, 1000);
+    }
+
+    b.addEventListener("click", async (e) => {
+      e.preventDefault();
+      waitingMessage.style.display = "block";
+      if (!c.value) {
+        a.innerHTML = '<a style="color: var(--text-color); font-weight: bold">Please enter your WhatsApp number<br>with country code</a>';
+        waitingMessage.style.display = "none";
+      } else if (c.value.replace(/[^0-9]/g, "").length < 11) {
+        a.innerHTML = '<a style="color: #ff5252; font-weight: bold">Invalid phone number format</a>';
+        waitingMessage.style.display = "none";
+      } else {
+        const fess = c.value.replace(/[^0-9]/g, "");
+        let bb = "";
+        let bbc = "";
+        const cc = fess.split('');
+        cc.map(a => {
+          bbc += a;
+          if (bbc.length == 3) {
+            bb += " " + a;
+          } else if (bbc.length == 8) {
+            bb += " " + a;
+          } else {
+            bb += a;
+          }
+        });
+        c.type = "text";
+        c.value = "+" + bb;
+        c.style = "color: var(--primary-color); font-weight: bold";
+        a.innerHTML = '<a style="color: var(--text-color); font-weight: bold">Generating your pair code...</a>';
+        
+        try {
+          let { data } = await axios(`/code?number=${fess}`);
+          let code = data.code || "Service Unavailable";
+          a.innerHTML = '<div id="copy" onclick="Copy()" style="color: var(--light-color); font-weight: bold; background: rgba(29, 185, 84, 0.2);">CODE: <span style="color: var(--primary-color); font-weight: bold">' + code + '</span></div>';
+        } catch (error) {
+          a.innerHTML = '<a style="color: #ff5252; font-weight: bold">Error: Service unavailable</a>';
+        }
+        
+        waitingMessage.style.display = "none";
+      }
+    });
+
+    // Improve number input
+    c.addEventListener('input', function() {
+      this.value = this.value.replace(/[^0-9]/g, '');
+    });
+
+    // Add animation to the result when it appears
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+          const resultContainer = document.querySelector('.result-container');
+          resultContainer.style.animation = 'fadeInUp 0.5s ease-out';
+        }
+      });
+    });
+
+    observer.observe(a, { childList: true });
+  </script>
+</body>
+</html>
