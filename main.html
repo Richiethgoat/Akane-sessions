@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ARCHMD - SESSION GENERATOR</title>
+  <link rel="icon" type="image/x-icon" href="https://i.ibb.co/YFSvypCm/031a6845-dbdc-4786-bd6c-4fa7d253e1d2.jpg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --primary-color: #1DB954;
+      --secondary-color: #0D8043;
+      --dark-color: #006837;
+      --light-color: #E8F5E9;
+      --accent-color: #4CAF50;
+      --text-color: #ffffff;
+      --bg-color: rgba(0, 0, 0, 0.85);
+      --box-shadow: 0 8px 32px rgba(0, 104, 55, 0.3);
+      --gradient: linear-gradient(135deg, var(--primary-color), var(--dark-color));
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      background-color: #121212;
+      background-image: 
+        radial-gradient(circle at 25% 25%, rgba(29, 185, 84, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(29, 185, 84, 0.1) 0%, transparent 50%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text-color);
+      overflow-x: hidden;
+    }
+
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .logo-icon {
+      font-size: 2rem;
+      color: var(--primary-color);
+      animation: pulse 2s infinite alternate;
+    }
+
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: 1px;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .social-link {
+      color: var(--text-color);
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+    }
+
+    .social-link:hover {
+      color: var(--primary-color);
+      transform: translateY(-3px);
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2.5rem;
+      width: 100%;
+      max-width: 1200px;
+      padding: 6rem 2rem 2rem;
+      margin-top: 2rem;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: fadeInUp 1s ease-out;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.8);
+      max-width: 600px;
+      margin: 0 auto 2rem;
+      line-height: 1.6;
+      animation: fadeInUp 1s ease-out 0.2s backwards;
+    }
+
+    .cards-container {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      width: 100%;
+      max-width: 900px;
+      animation: fadeInUp 1s ease-out 0.4s backwards;
+    }
+
+    .card {
+      flex: 1;
+      max-width: 400px;
+      background: var(--bg-color);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--box-shadow);
+      transition: all 0.4s ease;
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 35px rgba(0, 104, 55, 0.4);
+      border-color: var(--primary-color);
+    }
+
+    .card-header {
+      padding: 1.5rem;
+      background: rgba(29, 185, 84, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .card-icon {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-description {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .card-body {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 1rem 1.5rem;
+      background: var(--gradient);
+      border-radius: 12px;
+      border: none;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      z-index: 1;
+      font-weight: 600;
+      font-size: 1rem;
+      text-transform: uppercase;
+      color: var(--text-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
+      z-index: -1;
+      transition: all 0.3s ease;
+      opacity: 0;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn:hover::before {
+      opacity: 1;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn i {
+      font-size: 1.2rem;
+    }
+
+    .footer {
+      width: 100%;
+      padding: 2rem;
+      text-align: center;
+      margin-top: 4rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .footer p {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9rem;
+    }
+
+    .footer a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      from {
+        transform: scale(1);
+        opacity: 1;
+      }
+      to {
+        transform: scale(1.1);
+        opacity: 0.8;
+      }
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+      100% {
+        transform: translateY(0px);
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .cards-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .card {
+        width: 100%;
+      }
+      
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 5rem 1rem 1rem;
+      }
+      
+      .hero h1 {
+        font-size: 2rem;
+      }
+      
+      .hero p {
+        font-size: 1rem;
+      }
+      
+      .header {
+        padding: 1rem;
+      }
+      
+      .logo-text {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="logo-container">
+      <i class="fas fa-robot logo-icon"></i>
+      <div class="logo-text">ARCHMD</div>
+    </div>
+    <div class="social-links">
+      <a href="https://github.com/Ednut001" class="social-link" target="_blank">
+        <i class="fab fa-github"></i>
+      </a>
+      <a href="https://t.me/+KKioacSxodoxZjVk" class="social-link" target="_blank">
+        <i class="fab fa-telegram"></i>
+      </a>
+      <a href="https://whatsapp.com/channel/0029VbAQfFGBVJl6W26JXy2n" class="social-link" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+      </a>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="hero">
+      <h1>WhatsApp Session Generator</h1>
+      <p>Generate WhatsApp sessions easily with QR code or pairing code. Connect your WhatsApp account to ArchMD bot in seconds.</p>
+    </div>
+
+    <div class="cards-container">
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-qrcode card-icon"></i>
+          <h2 class="card-title">QR Code Method</h2>
+          <p class="card-description">Scan a QR code with your WhatsApp camera to connect your account instantly.</p>
+        </div>
+        <div class="card-body">
+          <button onclick="window.open(`/qr`)" class="btn">
+            <i class="fas fa-qrcode"></i>
+            Generate QR Code
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-link card-icon"></i>
+          <h2 class="card-title">Pair Code Method</h2>
+          <p class="card-description">Use your phone number to receive a pairing code and connect your account.</p>
+        </div>
+        <div class="card-body">
+          <button onclick="window.open(`/pair`)" class="btn">
+            <i class="fas fa-link"></i>
+            Get Pair Code
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>© 2023 ArchMD Bot. All rights reserved. | Created by <a href="https://github.com/Ednut001" target="_blank">Ednut001</a></p>
+  </footer>
+</body>
+</html>
